@@ -1,7 +1,3 @@
-#ifdef WINDOWS 
-#define GLFW_DLL
-#endif
-
 #include <iostream>
 #include <GLFW/glfw3.h>
 
