@@ -2,7 +2,6 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
 
 #include "Window.h"
 
@@ -51,9 +50,6 @@ Window::Window(GLint width, GLint height, std::string title)
 
     // OpenGL viewport so it can know the size of the rendering window
     glViewport(0, 0, width, height);
-
-
-    // Set the clear color to black
 }
 
 
@@ -63,3 +59,11 @@ Window::~Window() {
     glfwDestroyWindow(window_);
     glfwTerminate();
 }
+
+
+void Window::processInput() {
+    if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window_, true);
+    }
+}
+

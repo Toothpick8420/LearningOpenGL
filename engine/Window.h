@@ -1,7 +1,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#define GLFW_INCLUDE_NONE
 #include <string>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 // Error callback function must be set
@@ -17,10 +19,10 @@ public:
     void swapBuffers() { glfwSwapBuffers(window_); }
     void pollEvents()  { glfwPollEvents(); } 
 
+    void processInput();
 private:
     GLFWwindow * window_;
     GLint width_, height_;
-    GLfloat clear_r_ = 0, clear_g_ = 0, clear_b_ = 0;
 };
 
 #endif
