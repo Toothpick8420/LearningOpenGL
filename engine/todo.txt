@@ -1,2 +1,0 @@
-Window
-    - Check clear for sizes or out of bounds, or use a vector? / write my own / vec3f? vec3<t>

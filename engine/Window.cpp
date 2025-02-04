@@ -1,69 +1,90 @@
 #include <iostream>
 
+// Makes sure that glfw does not include the opengl headers 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include "Window.h"
 
-// Error callback function is called when any GLFW function has an error
-// Simple printing
+// Error Callback function called when any GLFW function has occured 
+// Simple Printing 
 void errorCallback(int error_num, const char * descr) {
-    std::cerr << "ErrorNum " << error_num << ": " << descr << std::endl; 
+    std::cerr << "ErrorNum: " << error_num << " : " << descr << std::endl;
 }
 
-Window::Window(GLint width, GLint height, std::string title) 
-    : width_(width), height_(height)
-{
 
-    // Make sure glfw inits right
+// Window constructor, initializes glfw/opengl context and creates the window pointer
+Window::Window(GLint width, GLint height, std::string title) 
+    : width_(width), height_(height), title_(title)
+{
+    // Initialize glfw 
     if (!glfwInit()) {
-        std::cerr << "GLFW initilization failed" << std::endl;
+        std::cerr << "GLFW initialization failed" << std::endl;
         return;
     }
 
-    // make sure we set the right open gl version 3.3
+    // Set the correct opengl version -> 3.3 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
- 
-    // Set the error callback function, must be set
+
+    // Set the error callback function
     glfwSetErrorCallback(errorCallback);
 
-    
-    // Create the window and OpenGL context
-    window_ = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+    // Create the window and opengl context
+    pwindow_ = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 
-    // Make sure window creation worked
-    if (!window_) {
-        std::cerr << "Window/Context creation failed" << std::endl;
+    // Check window creation 
+    if (!pwindow_) {
+        std::cerr << "Window/Context Creation Failed" << std::endl;
         return;
     }
 
-    // OpenGl context
-    glfwMakeContextCurrent(window_);
+    // Set the opengl context to the pwindow_ 
+    glfwMakeContextCurrent(pwindow_);
 
-    // Glad setup so I can use more opengl functions than 1.1
+    // Glad setup to use opengl functions 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cerr << "GLAD initilization failed" << std::endl;  
+        std::cerr << "GLAD initialization failed" << std::endl; 
         return;
     }
 
-    // OpenGL viewport so it can know the size of the rendering window
+    // opengl viewport 
     glViewport(0, 0, width, height);
 }
 
 
 // Destructor to cleanup 
 Window::~Window() {
-    // Cleanup
-    glfwDestroyWindow(window_);
+    // Cleanup 
+    glfwDestroyWindow(pwindow_);
     glfwTerminate();
 }
 
 
-void Window::processInput() {
-    if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window_, true);
-    }
+// Return true if the window should close 
+bool Window::shouldClose() const { 
+    return glfwWindowShouldClose(pwindow_);
 }
 
+
+// Swap the buffers for the windows -> look up double buffering
+void Window::swapBuffers() {
+    glfwSwapBuffers(pwindow_);
+}
+
+
+// Poll all window events like mouse input, keyboard input, etc
+void Window::pollEvents() const {
+    glfwPollEvents();
+}
+
+
+// FIXME: Maybe move this out of the window function or figure something out for handling
+// inputs better
+// Process window input 
+void Window::processInput() {
+    if (glfwGetKey(pwindow_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(pwindow_, true);
+    }
+}
