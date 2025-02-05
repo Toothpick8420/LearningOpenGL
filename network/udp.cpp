@@ -60,10 +60,18 @@ void UDPSocket::send(const std::string & data, const std::string & address, uint
 
 std::string UDPSocket::recv() {
     struct sockaddr_in sender;
-    int senderSize = sizeof(sender);
     char buffer[1024];
 
-    int received = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr*)&sender, &senderSize);
+    int received = -1;    
+    
+    #ifdef __linux__ 
+        socklen_t senderSize = sizeof(sender);
+        received = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr*)&sender, &senderSize);
+    #else
+        int senderSize = sizeof(sender);
+        received = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr*)&sender, &senderSize);
+    #endif
+
     if (received < 0) {
         std::cerr << "Recv failed!" << std::endl;
         return "";
