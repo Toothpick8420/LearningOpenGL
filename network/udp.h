@@ -2,6 +2,7 @@
 #define UDP_H
 
 #include <iostream>
+#include <cstdint>
 #include <cstring> // ?
 
 // Platform dependent includes

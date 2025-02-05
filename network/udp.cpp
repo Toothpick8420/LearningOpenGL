@@ -60,7 +60,7 @@ void UDPSocket::send(const std::string & data, const std::string & address, uint
 
 std::string UDPSocket::recv() {
     struct sockaddr_in sender;
-    socklen_t senderSize = sizeof(sender);
+    int senderSize = sizeof(sender);
     char buffer[1024];
 
     int received = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr*)&sender, &senderSize);
